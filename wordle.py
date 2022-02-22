@@ -1,11 +1,14 @@
 from random import randint
+from colorama import Fore as fore
 
 def main():
     word = getword()
+    guess(word)
 
-def openwordlist():
-    f = open('words.txt', r)
+def getwordlist():
+    f = open('5words.txt', 'r')
     words = f.read()
+    words = words.split()
     return words
 
 def checkword(word):
@@ -18,30 +21,34 @@ def checkword(word):
 def getword():
     words = getwordlist()
     index = randint(0,len(words))
-    word = lower(words[index])
+    word = words[index].lower()
     return word
 
 def guess(word):
-    current = ['_','_','_','_','_','_','_']
-    errors = True
-    for i in range(0,7):
+    for i in range(0,len(word)):
+        errors = True
         while errors:
-            print("enter your first attempt")
             guess = input()
-            if len(guess) != 7:
-                print("input must be 7 characters")
+            if len(guess) != len(word):
+                print(f"input must be {len(word)}characters")
             elif not checkword(guess):
-                print("word no in word list")
+                print("word not in word list")
             else:
                 errors = False
-        if guess = word:
+        if guess == word:
+            print(fore.GREEN + guess)
             print(f"woo! got it in {i}")
             exit(0)
-        guess = guess.split()
-        for l in range(len(guess)):
+        current = list(guess)
+        for l in range(0,len(word)):
             if guess[l] == word[l]:
-                current[l]=f"\033[1;32;40m{guess[l]}"
+                current[l]=fore.GREEN + guess[l]
             elif guess[l] in word:
-                current[l]=f'\033[1;33;40m{guess[l]}'
-        print(current[l])
+                current[l]=fore.YELLOW + guess[l]
+            else:
+                current[l]=fore.RESET + guess[l]
+        print(''.join(current) + fore.RESET)
     print(f'todays word was {word}')
+    exit(0)
+
+main()
