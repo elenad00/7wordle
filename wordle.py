@@ -1,5 +1,15 @@
+from argparse import ArgumentParser
 from random import randint
 from colorama import Fore as fore
+
+def get_args():
+    args = ArgumentParser('The commands to run the script')
+    args.add_argument(
+        '-w', '--wordbank', type=int, default=7,
+        help='The wordbank to use for this game (5 or 7)'
+    )
+    arguments = args.parse_args()
+    return arguments.wordbank
 
 def main():
     word = getword()
@@ -8,7 +18,8 @@ def main():
     guess(word)
 
 def getwordlist() -> list:
-    f = open('5words.txt', 'r')
+    wordbank_file = "5words.txt" if get_args() == 5 else "7words.txt"
+    f = open(wordbank_file, 'r')
     words = f.read()
     words = words.split()
     return words
@@ -30,7 +41,7 @@ def guess(word: str):
         while errors:
             guess = input()
             if len(guess) != len(word):
-                print(f"input must be {len(word)}characters")
+                print(f"input must be {len(word)} characters")
             elif not checkword(guess):
                 print("word not in word list")
             else:
